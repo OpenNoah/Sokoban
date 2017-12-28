@@ -1,0 +1,9 @@
+[Desktop Entry]
+Exec=embeddedkonsole /opt/QtPalmtop/bin/z/boxes.sh
+Icon=static/desktop/z/boxes
+Type=Application
+Name=Boxes Game
+Comment=V1.00
+Name[zh_CN]=Boxes Game ( Made By Norman )
+Comment[zh_CN]=V1.00
+WifiCheck = 0
