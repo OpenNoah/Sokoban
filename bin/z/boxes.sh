@@ -1,40 +1,44 @@
 #!/bin/bash
-#Î»ÖÃ¶¨Òå
-app='/opt/QtPalmtop/bin/z'
-data='/opt/QtPalmtop/data/z/boxes'
-ctrlf='/opt/QtPalmtop/data/z/common/ctrl.dat'
+#ä½ç½®å®šä¹‰
+#app='/opt/QtPalmtop/bin/z'
+app="$PWD/bin/z"
+#data='/opt/QtPalmtop/data/z/boxes'
+data="$PWD/data/z/boxes"
+#ctrlf='/opt/QtPalmtop/data/z/common/ctrl.dat'
+ctrlf="$PWD/data/z/common/term.dat"
 tmpf='/tmp/Boxes_filelist.tmp'
 ltmp='/tmp/ListSelect.tmp'
-save='/Settings/Boxes.conf'
+#save='/Settings/Boxes.conf'
+save="$PWD/Boxes.conf"
 
-#±äÁ¿¶¨Òå
+#å˜é‡å®šä¹‰
 for ((n=0;n<16;n++)); do
-  declare -a line$n
+  eval declare -a line$n
 done
 inc='\E[93;40m'
 namec='\E[92;40m'; levelc='\E[94;40m'
 light='\E[97;40m'; end='\E[0m'
-declare -a block=("'\E[95;40m  ' '\E[95;107m  ' \
-'\E[95;102m¡Á' '\E[95;101m¡Ñ' '\E[95;104m¦¸' \
-'\E[95;103m¡É' '\E[95;106m¦¤'") record \
-ctrl=("$(<$ctrlf)") player \
-comc=("'\E[31m' '\E[91;102m'")
+declare -a block=('\E[95;40m  ' '\E[95;107m  ' \
+'\E[95;102m Ã—' '\E[95;101m âŠ™' '\E[95;104m Î©' \
+'\E[95;103m âˆ©' '\E[95;106m Î”') record \
+ctrl=($(<$ctrlf)) player \
+comc=('\E[31m' '\E[91;102m')
 
-#º¯Êı
+#å‡½æ•°
 prog_level(){
   levelnum=0; test=0
-  echo -ne "$inc´´½¨¹Ø¿¨ÁĞ±íÖĞ...$end"
+  echo -ne "$incåˆ›å»ºå…³å¡åˆ—è¡¨ä¸­...$end"
   if [ -e level0.map ]; then test=1; fi
   ls -1 *.map > $tmpf
   while read line; do
     ((levelnum++))
   done < $tmpf
   levelnum=$((levelnum-test))
-  $app/List.sh "       ÍÆÏä×Ó" "       Made By Norman (ZHIYB)"\
+  $app/List.sh "       æ¨ç®±å­" "       Made By Norman (ZHIYB)"\
   "" "1" "10" "$level"\
   "$([ $test = 1 ] && echo -n "' TestMap ' "
     for ((n=1;n<=levelnum;n++)); do echo -n "' Level $n ' "; done)\
-  '$comc ÍË    ³ö '"
+  '$comc é€€    å‡º '"
   stty -echo; echo -en "\E[?25l"
   case $(<$ltmp) in
   $((levelnum+test)) ) prog_quit;;
@@ -44,34 +48,34 @@ prog_level(){
 }
 prog_msg(){
   win=0; step=0; bak=1; minstep=0; unset record[@] declare1
-  echo -en "${light}Level $level $inc¶ÁÈ¡ÖĞ...$end"
+  echo -en "${light}Level $level $incè¯»å–ä¸­...$end"
   for ((n=0;n<16;n++)); do
-    unset line$n[@]; read -a line$n
+    unset line$n[@]; eval read -a line$n
     tmp="line$n[@]"; tmp2="${!tmp}"
     until [ $(expr index "$tmp2" 3) = 0 ]; do
       ((win++)); tmp2=${tmp2#*3}
     done
-    [ $(expr index "${!tmp}" 5) != 0 ] && player=($n $(($(expr index "${!tmp}" 5)/2)))
+    [ $(expr index "$(echo ${!tmp})" 5) != 0 ] && eval player=($n $(($(expr index "$(echo ${!tmp})" 5)/2)))
   done < "$data/level${level}.map"
   [ -e "$data/level${level}.sav" ] && minstep=$(<"$data/level${level}.sav")
   echo -n $level > $save
 }
 prog_show(){
   echo -en "\E[2J\E[1;1H${block[line0[0]]}${block[line0[1]]}${block[line0[2]]}${block[line0[3]]}${block[line0[4]]}${block[line0[5]]}${block[line0[6]]}${block[line0[7]]}${block[line0[8]]}${block[line0[9]]}${block[line0[10]]}${block[line0[11]]}${block[line0[12]]}${block[line0[13]]}${block[line0[14]]}${block[line0[15]]}$light  |$end
-${block[line1[0]]}${block[line1[1]]}${block[line1[2]]}${block[line1[3]]}${block[line1[4]]}${block[line1[5]]}${block[line1[6]]}${block[line1[7]]}${block[line1[8]]}${block[line1[9]]}${block[line1[10]]}${block[line1[11]]}${block[line1[12]]}${block[line1[13]]}${block[line1[14]]}${block[line1[15]]}$light  |$namec  ***ÍÆÏä×Ó***$end
+${block[line1[0]]}${block[line1[1]]}${block[line1[2]]}${block[line1[3]]}${block[line1[4]]}${block[line1[5]]}${block[line1[6]]}${block[line1[7]]}${block[line1[8]]}${block[line1[9]]}${block[line1[10]]}${block[line1[11]]}${block[line1[12]]}${block[line1[13]]}${block[line1[14]]}${block[line1[15]]}$light  |$namec  ***æ¨ç®±å­***$end
 ${block[line2[0]]}${block[line2[1]]}${block[line2[2]]}${block[line2[3]]}${block[line2[4]]}${block[line2[5]]}${block[line2[6]]}${block[line2[7]]}${block[line2[8]]}${block[line2[9]]}${block[line2[10]]}${block[line2[11]]}${block[line2[12]]}${block[line2[13]]}${block[line2[14]]}${block[line2[15]]}$light  |$levelc    Level $light$level$end
 ${block[line3[0]]}${block[line3[1]]}${block[line3[2]]}${block[line3[3]]}${block[line3[4]]}${block[line3[5]]}${block[line3[6]]}${block[line3[7]]}${block[line3[8]]}${block[line3[9]]}${block[line3[10]]}${block[line3[11]]}${block[line3[12]]}${block[line3[13]]}${block[line3[14]]}${block[line3[15]]}$light  |$end
-${block[line4[0]]}${block[line4[1]]}${block[line4[2]]}${block[line4[3]]}${block[line4[4]]}${block[line4[5]]}${block[line4[6]]}${block[line4[7]]}${block[line4[8]]}${block[line4[9]]}${block[line4[10]]}${block[line4[11]]}${block[line4[12]]}${block[line4[13]]}${block[line4[14]]}${block[line4[15]]}$light  |    ${comc[((dat==0))]} ³·  Ïû $end
+${block[line4[0]]}${block[line4[1]]}${block[line4[2]]}${block[line4[3]]}${block[line4[4]]}${block[line4[5]]}${block[line4[6]]}${block[line4[7]]}${block[line4[8]]}${block[line4[9]]}${block[line4[10]]}${block[line4[11]]}${block[line4[12]]}${block[line4[13]]}${block[line4[14]]}${block[line4[15]]}$light  |    ${comc[((dat==0))]} æ’¤  æ¶ˆ $end
 ${block[line5[0]]}${block[line5[1]]}${block[line5[2]]}${block[line5[3]]}${block[line5[4]]}${block[line5[5]]}${block[line5[6]]}${block[line5[7]]}${block[line5[8]]}${block[line5[9]]}${block[line5[10]]}${block[line5[11]]}${block[line5[12]]}${block[line5[13]]}${block[line5[14]]}${block[line5[15]]}$light  |$end
-${block[line6[0]]}${block[line6[1]]}${block[line6[2]]}${block[line6[3]]}${block[line6[4]]}${block[line6[5]]}${block[line6[6]]}${block[line6[7]]}${block[line6[8]]}${block[line6[9]]}${block[line6[10]]}${block[line6[11]]}${block[line6[12]]}${block[line6[13]]}${block[line6[14]]}${block[line6[15]]}$light  |    ${comc[((dat==1))]} ÖØ  Íæ $end
+${block[line6[0]]}${block[line6[1]]}${block[line6[2]]}${block[line6[3]]}${block[line6[4]]}${block[line6[5]]}${block[line6[6]]}${block[line6[7]]}${block[line6[8]]}${block[line6[9]]}${block[line6[10]]}${block[line6[11]]}${block[line6[12]]}${block[line6[13]]}${block[line6[14]]}${block[line6[15]]}$light  |    ${comc[((dat==1))]} é‡  ç© $end
 ${block[line7[0]]}${block[line7[1]]}${block[line7[2]]}${block[line7[3]]}${block[line7[4]]}${block[line7[5]]}${block[line7[6]]}${block[line7[7]]}${block[line7[8]]}${block[line7[9]]}${block[line7[10]]}${block[line7[11]]}${block[line7[12]]}${block[line7[13]]}${block[line7[14]]}${block[line7[15]]}$light  |$end
-${block[line8[0]]}${block[line8[1]]}${block[line8[2]]}${block[line8[3]]}${block[line8[4]]}${block[line8[5]]}${block[line8[6]]}${block[line8[7]]}${block[line8[8]]}${block[line8[9]]}${block[line8[10]]}${block[line8[11]]}${block[line8[12]]}${block[line8[13]]}${block[line8[14]]}${block[line8[15]]}$light  |    ${comc[((dat==2))]} ·µ  »Ø $end
+${block[line8[0]]}${block[line8[1]]}${block[line8[2]]}${block[line8[3]]}${block[line8[4]]}${block[line8[5]]}${block[line8[6]]}${block[line8[7]]}${block[line8[8]]}${block[line8[9]]}${block[line8[10]]}${block[line8[11]]}${block[line8[12]]}${block[line8[13]]}${block[line8[14]]}${block[line8[15]]}$light  |    ${comc[((dat==2))]} è¿”  å› $end
 ${block[line9[0]]}${block[line9[1]]}${block[line9[2]]}${block[line9[3]]}${block[line9[4]]}${block[line9[5]]}${block[line9[6]]}${block[line9[7]]}${block[line9[8]]}${block[line9[9]]}${block[line9[10]]}${block[line9[11]]}${block[line9[12]]}${block[line9[13]]}${block[line9[14]]}${block[line9[15]]}$light  |$end
-${block[line10[0]]}${block[line10[1]]}${block[line10[2]]}${block[line10[3]]}${block[line10[4]]}${block[line10[5]]}${block[line10[6]]}${block[line10[7]]}${block[line10[8]]}${block[line10[9]]}${block[line10[10]]}${block[line10[11]]}${block[line10[12]]}${block[line10[13]]}${block[line10[14]]}${block[line10[15]]}$light  |$inc  ÒÑ×ß$light$step$inc²½$end
+${block[line10[0]]}${block[line10[1]]}${block[line10[2]]}${block[line10[3]]}${block[line10[4]]}${block[line10[5]]}${block[line10[6]]}${block[line10[7]]}${block[line10[8]]}${block[line10[9]]}${block[line10[10]]}${block[line10[11]]}${block[line10[12]]}${block[line10[13]]}${block[line10[14]]}${block[line10[15]]}$light  |$inc  å·²èµ°$light$step$incæ­¥$end
 ${block[line11[0]]}${block[line11[1]]}${block[line11[2]]}${block[line11[3]]}${block[line11[4]]}${block[line11[5]]}${block[line11[6]]}${block[line11[7]]}${block[line11[8]]}${block[line11[9]]}${block[line11[10]]}${block[line11[11]]}${block[line11[12]]}${block[line11[13]]}${block[line11[14]]}${block[line11[15]]}$light  |$end
-${block[line12[0]]}${block[line12[1]]}${block[line12[2]]}${block[line12[3]]}${block[line12[4]]}${block[line12[5]]}${block[line12[6]]}${block[line12[7]]}${block[line12[8]]}${block[line12[9]]}${block[line12[10]]}${block[line12[11]]}${block[line12[12]]}${block[line12[13]]}${block[line12[14]]}${block[line12[15]]}$light  |$inc  ×îÉÙ$light$((minstep==0?step:minstep))$inc²½$end
+${block[line12[0]]}${block[line12[1]]}${block[line12[2]]}${block[line12[3]]}${block[line12[4]]}${block[line12[5]]}${block[line12[6]]}${block[line12[7]]}${block[line12[8]]}${block[line12[9]]}${block[line12[10]]}${block[line12[11]]}${block[line12[12]]}${block[line12[13]]}${block[line12[14]]}${block[line12[15]]}$light  |$inc  æœ€å°‘$light$((minstep==0?step:minstep))$incæ­¥$end
 ${block[line13[0]]}${block[line13[1]]}${block[line13[2]]}${block[line13[3]]}${block[line13[4]]}${block[line13[5]]}${block[line13[6]]}${block[line13[7]]}${block[line13[8]]}${block[line13[9]]}${block[line13[10]]}${block[line13[11]]}${block[line13[12]]}${block[line13[13]]}${block[line13[14]]}${block[line13[15]]}$light  |$end
-${block[line14[0]]}${block[line14[1]]}${block[line14[2]]}${block[line14[3]]}${block[line14[4]]}${block[line14[5]]}${block[line14[6]]}${block[line14[7]]}${block[line14[8]]}${block[line14[9]]}${block[line14[10]]}${block[line14[11]]}${block[line14[12]]}${block[line14[13]]}${block[line14[14]]}${block[line14[15]]}$light  |$inc  Ê£Óà$light$win$inc¸öÏä×Ó$end
+${block[line14[0]]}${block[line14[1]]}${block[line14[2]]}${block[line14[3]]}${block[line14[4]]}${block[line14[5]]}${block[line14[6]]}${block[line14[7]]}${block[line14[8]]}${block[line14[9]]}${block[line14[10]]}${block[line14[11]]}${block[line14[12]]}${block[line14[13]]}${block[line14[14]]}${block[line14[15]]}$light  |$inc  å‰©ä½™$light$win$incä¸ªç®±å­$end
 ${block[line15[0]]}${block[line15[1]]}${block[line15[2]]}${block[line15[3]]}${block[line15[4]]}${block[line15[5]]}${block[line15[6]]}${block[line15[7]]}${block[line15[8]]}${block[line15[9]]}${block[line15[10]]}${block[line15[11]]}${block[line15[12]]}${block[line15[13]]}${block[line15[14]]}${block[line15[15]]}$light  |$end"
 }
 prog_check(){
@@ -96,8 +100,8 @@ prog_check(){
 prog_win(){
   [ $win = 0 ] || return $win
   ((step<((minstep==0?step+1:minstep)))) && minstep=$step && echo -n $step > "$data/level${level}.sav"
-  $app/MsgBox.sh "4 14 0 0" "Congratulations! '¹ı¹Ø!  $step²½'"\
-  "ÏÂÒ»¹Ø ÖØÍæ´Ë¹Ø ²é¿´¹Ø¿¨µØÍ¼ ·µ»ØÖ÷²Ëµ¥"
+  $app/MsgBox.sh "4 14 0 0" "Congratulations! 'è¿‡å…³!  $stepæ­¥'"\
+  "ä¸‹ä¸€å…³ é‡ç©æ­¤å…³ æŸ¥çœ‹å…³å¡åœ°å›¾ è¿”å›ä¸»èœå•"
   tmp=$?
   stty -echo; echo -en "\E[?25l"; winq=0
   case $tmp in
@@ -112,8 +116,8 @@ prog_win(){
   return $winq
 }
 prog_finish(){
-  $app/Msgbox.sh "4 14 0 0" "Congratulations! ÕâÊÇ×îºóÒ»¹Ø!"\
-  "ÖØĞÂ¿ªÊ¼ ÖØÍæ´Ë¹Ø ²é¿´¹Ø¿¨µØÍ¼ ·µ»ØÖ÷²Ëµ¥"
+  $app/Msgbox.sh "4 14 0 0" "Congratulations! è¿™æ˜¯æœ€åä¸€å…³!"\
+  "é‡æ–°å¼€å§‹ é‡ç©æ­¤å…³ æŸ¥çœ‹å…³å¡åœ°å›¾ è¿”å›ä¸»èœå•"
   tmp=$?
   stty -echo; echo -en "\E[?25l"
   case $tmp in
@@ -133,7 +137,8 @@ prog_select(){
     "${ctrl[1]}" ) ((dat=dat==2?2:dat+1));;
     "${ctrl[2]}" ) dat=0;;
     "${ctrl[3]}" ) dat=2;;
-    "${ctrl[4]:0:3}" ) read -sn 2; dat=3;;
+    "${ctrl[4]:0:3}" ) read -sn 1; dat=3;;
+    "${ctrl[5]:0:3}" ) read -sn 1; dat=3;;
     "" )
       case $dat in
       0 ) prog_return;;
@@ -145,7 +150,7 @@ prog_select(){
   done
 }
 prog_return(){
-  [ ${#record[@]} = 0 ] && echo -en "$incÎŞ¿É³·Ïû²Ù×÷!$end" && usleep 500000 && return 1
+  [ ${#record[@]} = 0 ] && echo -en "$incæ— å¯æ’¤æ¶ˆæ“ä½œ!$end" && usleep 500000 && return 1
   do_box=${record[${#record[@]}-1]}; unset record[${#record[@]}-1]
   key=${record[${#record[@]}-1]}; unset record[${#record[@]}-1]
   tmp1="line${player[0]}[${player[1]}]"
@@ -172,17 +177,17 @@ prog_return(){
   ((step--)); bak=${!tmp}
 }
 prog_quit(){
-  echo -e "$incÍË³ö...$end"
+  echo -e "$incé€€å‡º...$end"
   killall embeddedkonsole
   exit
 }
 
-#³õÊ¼»¯
+#åˆå§‹åŒ–
 stty -echo; echo -en "\E[?25l"
 cd $data; quit=0; bak=1; level=0; dat=3
 [ -e $save ] && level=$(<$save)
 
-#Ö÷³ÌĞò
+#ä¸»ç¨‹åº
 prog_level
 until [ $quit = 1 ]; do
   prog_show
@@ -195,14 +200,14 @@ until [ $quit = 1 ]; do
     tmp2="line$((player[0]-2))[${player[1]}]"
     [ ${player[0]} = 1 ] && tmp2=tmp3
     prog_check || continue
-    declare -a line${player[0]}[${player[1]}]=$init $tmp=$next_block $tmp2=$next_block2
+    eval declare -a line${player[0]}[${player[1]}]=$init $tmp=$next_block $tmp2=$next_block2
     player[0]=$((next_block==5?player[0]-1:player[0]));;
   "${ctrl[1]}" )
     [ ${player[0]} = 15 ] && continue; key=1
     tmp="line$((player[0]+1))[${player[1]}]"
     tmp2="line$((player[0]+2))[${player[1]}]"
     prog_check || continue
-    declare -a line${player[0]}[${player[1]}]=$init $tmp=$next_block $tmp2=$next_block2
+    eval declare -a line${player[0]}[${player[1]}]=$init $tmp=$next_block $tmp2=$next_block2
     player[0]=$((next_block==5?player[0]+1:player[0]));;
   "${ctrl[2]}" )
     [ ${player[1]} = 0 ] && continue; key=2
@@ -210,17 +215,19 @@ until [ $quit = 1 ]; do
     tmp2="line${player[0]}[$((player[1]-2))]"
     [ ${player[1]} = 1 ] && tmp2=tmp3
     prog_check || continue
-    declare -a line${player[0]}[${player[1]}]=$init $tmp=$next_block $tmp2=$next_block2
+    eval declare -a line${player[0]}[${player[1]}]=$init $tmp=$next_block $tmp2=$next_block2
     player[1]=$((next_block==5?player[1]-1:player[1]));;
   "${ctrl[3]}" )
     [ ${player[1]} = 15 ] && continue; key=3
     tmp="line${player[0]}[$((player[1]+1))]"
     tmp2="line${player[0]}[$((player[1]+2))]"
     prog_check || continue
-    declare -a line${player[0]}[${player[1]}]=$init $tmp=$next_block $tmp2=$next_block2
+    eval declare -a line${player[0]}[${player[1]}]=$init $tmp=$next_block $tmp2=$next_block2
     player[1]=$((next_block==5?player[1]+1:player[1]));;
-  ${ctrl[4]:0:3} ) read -sn 2; prog_select
-    declare -a a $declare1
+  ${ctrl[4]:0:3} ) read -sn 1; prog_select
+    eval declare -a a $declare1;;
+  ${ctrl[5]:0:3} ) read -sn 1; prog_select
+    eval declare -a a $declare1;;
   esac
 done
 stty -echo; echo -e "\E[?25h"; exit 0
